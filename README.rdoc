@@ -1,12 +1,68 @@
-= Todo App
-== Week 6 of my 12 in 12 Challenge
+= AWS X-Ray For Rails
 
-My goal with this challenge is to teach myself Ruby on Rails by building a new web app (using rails) each week for 12 weeks.
+== Description
+X-Ray by AWS allows you to instrument a variety of applications to record time and responses for http requests, aws sdk and database with a simple middleware option.  The full features of the suit include the ability to configure and instrument parts of the code manually allowing for various “subsegments” of data collection making it possible to more closely instrument the application.
 
-This week I built a Todo application (Pretty much the 'Hello World' of Development Tutorials). We have the ability to create multiple Todo lists and multiple Todo items for each list, and also the ability to mark an item as complete.
+The theme of the system is that the X-Ray middleware essentially assigns the incoming request an id and tracks it through the system so on a very basic level traces are closely tied to a request for rails applications. Inside there are subsegments to analyze and store data within a trace.
 
-Interested in learning how to build this application? Watch the {How To Screencast here}[https://www.youtube.com/channel/UCfWZwsP8trUy5uHJg8gcGIQ]
+https://s3.amazonaws.com/fandeavor/rdoc/fig1.png
 
----
+The key feature that is helpful for any web application is the tracing data it gives by default around the request and how long it took.
 
-You can find me on {Twitter}[http://twitter.com/mackenziechild] or follow along for more Rails on my website {MackenzieChild.me}[http://mackenziechild.me]
+https://s3.amazonaws.com/fandeavor/rdoc/fig2.png
+
+List View of the traces (above) and the Detail View of an individual trace(below).
+
+https://s3.amazonaws.com/fandeavor/rdoc/fig3.png
+
+The data gathered from the sql rows is particularly useful for situations where the database might be being called multiple times in a single request but one might be underperforming dramatically
+
+== Billing
+
+Trace Recordings are a bulk of the price that will be incurred for Everfest.  The short version is that every 1 million traces will be $5/month.  There is also a scan charge when the traces are read which roughly translates into reporting.  The free tier for this is 1,000,000/month so until something is programmatically hitting the reporting you shouldn’t hit this cost. 
+
+By default the X-Ray sampling rate is about 5% the price estimations based on 15/rps (assuming these are all served by the rails app more research would be needed to determine if some of these are static assets being served by apache not rails).
+
+  Daily Requests: 1,296,000
+  Daily Sampled Requests: 64,800
+  Monthly Sampled Requests: 1,944,000
+  Cost: 1,944,000/1,000,000 * $5 = $10/monthly  
+
+=== Installation
+https://docs.aws.amazon.com/xray/latest/devguide/xray-sdk-ruby.html
+
+https://docs.aws.amazon.com/xray/latest/devguide/xray-sdk-ruby-middleware.html
+
+=== Four Steps To Installing Middleware
+
+1. Add <tt>gem 'aws-sdk'</tt> to the Gemfile
+2. Add  <tt>gem 'aws-xray-sdk', require: ['aws-xray-sdk/facets/rails/railtie']</tt>
+3. Add to the file <tt>config/initializers/aws_xray.rb</tt>
+  Rails.application.config.xray = {
+    name: 'TODO APP',
+    patch: %I[net_http aws_sdk],
+    active_record: true
+    Context_missing: 'LOG_ERROR'
+  }
+4. A client will need to be installed on the system running the rails app.  For local one can be downloaded and for the beanstalk environment will need to include the config file in <tt>.ebextensions/xray-daemon.config</tt>
+  option_settings:
+    aws:elasticbeanstalk:xray:
+      XRayEnabled: true
+
+https://docs.aws.amazon.com/xray/latest/devguide/xray-daemon-beanstalk.html
+
+==== Recommendations
+
+Given the cost I would recommend increasing the sampling rate to 10-20%.
+
+Out of the box the system will give a good amount of data but for full features about instrumenting specific sections of code manually go here: 
+
+https://docs.aws.amazon.com/xray/latest/devguide/xray-sdk-ruby-middleware.html
+
+=== Further Concepts
+
+====Annotations
+Simply a value that can be added to a trace that will be indexed in later retrieval as a filter for deep reporting.
+
+====Metadata
+Basically any serializable value that will be added to the traces to be retrieved on scanning of the system.
