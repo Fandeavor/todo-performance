@@ -35,16 +35,23 @@ https://docs.aws.amazon.com/xray/latest/devguide/xray-sdk-ruby-middleware.html
 
 === Four Steps To Installing Middleware
 
-1. Add <tt>gem 'aws-sdk'</tt> to the Gemfile
-2. Add  <tt>gem 'aws-xray-sdk', require: ['aws-xray-sdk/facets/rails/railtie']</tt>
-3. Add to the file <tt>config/initializers/aws_xray.rb</tt>
+==== 1
+Add <tt>gem 'aws-sdk'</tt> to the Gemfile
+
+==== 2
+Add  <tt>gem 'aws-xray-sdk', require: ['aws-xray-sdk/facets/rails/railtie']</tt>
+
+==== 3
+Add to the file <tt>config/initializers/aws_xray.rb</tt>
   Rails.application.config.xray = {
     name: 'TODO APP',
     patch: %I[net_http aws_sdk],
     active_record: true
     Context_missing: 'LOG_ERROR'
   }
-4. A client will need to be installed on the system running the rails app.  For local one can be downloaded and for the beanstalk environment will need to include the config file in <tt>.ebextensions/xray-daemon.config</tt>
+  
+==== 4
+A client will need to be installed on the system running the rails app.  For local one can be downloaded and for the beanstalk environment will need to include the config file in <tt>.ebextensions/xray-daemon.config</tt>
   option_settings:
     aws:elasticbeanstalk:xray:
       XRayEnabled: true
