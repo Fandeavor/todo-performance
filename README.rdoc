@@ -5,15 +5,15 @@ X-Ray by AWS allows you to instrument a variety of applications to record time a
 
 The theme of the system is that the X-Ray middleware essentially assigns the incoming request an id and tracks it through the system so on a very basic level traces are closely tied to a request for rails applications. Inside there are subsegments to analyze and store data within a trace.
 
-https://s3.amazonaws.com/fandeavor/rdoc/fig1.png
+https://s3.amazonaws.com/fandeavor/rdoc/fig1a.png
 
 The key feature that is helpful for any web application is the tracing data it gives by default around the request and how long it took.
 
-https://s3.amazonaws.com/fandeavor/rdoc/fig2.png
+https://s3.amazonaws.com/fandeavor/rdoc/fig2a.png
 
 List View of the traces (above) and the Detail View of an individual trace(below).
 
-https://s3.amazonaws.com/fandeavor/rdoc/fig3.png
+https://s3.amazonaws.com/fandeavor/rdoc/fig3a.png
 
 The data gathered from the sql rows is particularly useful for situations where the database might be being called multiple times in a single request but one might be underperforming dramatically
 
