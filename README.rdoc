@@ -77,5 +77,7 @@ Basically any serializable value that will be added to the traces to be retrieve
 ====Load Testing
 Loader.io is a great easy-to-use affordable load testing tool. It comes with a free tier which can get you along way. We recommend using Loader.io for load testing and then using X-Ray/Performance Insights for checking the results and digging into issues.
 
+Note: in the TODO app we've left our loader.io verification endpoint (in /public/loderio-*).
+
 =====Getting Started
 https://support.loader.io/category/14-getting-started
