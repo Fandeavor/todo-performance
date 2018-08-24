@@ -73,3 +73,9 @@ Simply a value that can be added to a trace that will be indexed in later retrie
 
 ====Metadata
 Basically any serializable value that will be added to the traces to be retrieved on scanning of the system.
+
+====Load Testing
+Loader.io is a great easy-to-use affordable load testing tool. It comes with a free tier which can get you along way. We recommend using Loader.io for load testing and then using X-Ray/Performance Insights for checking the results and digging into issues.
+
+=====Getting Started
+https://support.loader.io/category/14-getting-started
